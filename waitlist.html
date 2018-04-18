@@ -83,7 +83,23 @@
     </footer>
 
   </div>
+  <script type="text/javascript">
+    var currentUrl = window.location.origin;
+    $.ajax({
+      url: currentUrl + "/api/tables",
+      method: "GET",
+    }).then(function (res) {
+      console.log(res);
+      if (res == "There's no waitlist.") {
 
+      } else {
+        for (var i = 0; i < res.length; i++) {
+          $("#tableSection").append(res[i].customerName + "<br>");
+        }
+      }
+    });
+
+  </script>
 </body>
 
 </html>

@@ -19,25 +19,46 @@ app.use(bodyParser.json());
 var reservations = [];
 
 // Basic route that sends the user first to the AJAX Page
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/reservation", function(req, res) {
+app.get("/reservation", function (req, res) {
   res.sendFile(path.join(__dirname, "makeRes.html"));
 });
 
-app.get("/waitlist", function(req, res) {
+app.get("/waitlist", function (req, res) {
   res.sendFile(path.join(__dirname, "waitlist.html"));
 });
+//pushing first five entries to tables array
+app.get("/api/tables", function (req, res) {
+  var tables = [];
+  for (var i = 0; i < 5 && i < reservations.length; i++) {
+    tables.push(reservations[i]);
+  }
+  return res.json(tables);
+});
+//pushing the remainging entries to waitlist
+
+app.get("/api/waitlist", function (req, res) {
+  var waitlist = [];
+  if (reservations.length > 5) {
+    for (var i = 5; i < reservations.length; i++) {
+      waitlist.push(reservations[i]);
+    }
+    return res.json(waitlist);
+  }
+  return res.json(waitlist);
+});
+
 
 // Create New Characters - takes in JSON input
-app.post("/api/reservation", function(req, res) {
+app.post("/api/reservation", function (req, res) {
   // req.body hosts is equal to the JSON post sent from the user
   // This works because of our body-parser middleware
   var newRes = req.body;
 
-  console.log(newcharacter);
+  console.log(newRes);
 
   reservations.push(newRes);
 
@@ -46,6 +67,6 @@ app.post("/api/reservation", function(req, res) {
 
 // Starts the server to begin listening
 // =============================================================
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log("App listening on PORT " + PORT);
 });
